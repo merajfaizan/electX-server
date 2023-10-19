@@ -25,11 +25,20 @@ async function run() {
     await client.connect();
     console.log("Connected to the database");
 
+    // db and collections
     const productsCollection = client.db("electricShop").collection("products");
+    const usersCollection = client.db("electricShop").collection("users");
 
     app.get("/products", async (req, res) => {
       const products = await productsCollection.find({}).toArray();
-      res.send("products found");
+      res.send(products);
+    });
+
+    // user post api endpoint
+    app.post("/user", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
     });
   } finally {
     // await client.close(console.log("database is closed"));

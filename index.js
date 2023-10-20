@@ -36,6 +36,14 @@ async function run() {
       res.send(products);
     });
 
+    // get products by brand name endpoint
+    app.get("/products/:brand", async (req, res) => {
+      const query = { brand: req.params.brand };
+      console.log(query);
+      const products = await productsCollection.find(query).toArray();
+      res.send(products);
+    });
+
     // single product post api endpoint
     app.post("/products", async (req, res) => {
       const product = req.body;

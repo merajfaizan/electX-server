@@ -66,11 +66,10 @@ async function run() {
       }
     });
 
-    // user get and update api endpoint
-    app.post("/users/:uid", async (req, res) => {
+    // user get api endpoint
+    app.get("/users/:uid", async (req, res) => {
       const query = { uid: req.params.uid };
-      const product = { $push: { cart: req.body } };
-      const result = await usersCollection.findOneAndUpdate(query, product);
+      const result = await usersCollection.findOne(query);
       res.send(result);
     });
 
@@ -78,6 +77,30 @@ async function run() {
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    // user get and update cart api endpoint
+    app.post("/users/:uid", async (req, res) => {
+      const query = { uid: req.params.uid };
+      const product = { $push: { cart: req.body } };
+      const result = await usersCollection.findOneAndUpdate(query, product);
+      res.send(result);
+    });
+
+    // user get and delete a data form cart api endpoint
+    app.post("/removeItem", async (req, res) => {
+      const { uid, productId } = req.body;
+      console.log(`uid: ${uid}, productId: ${productId}`);
+      const filter = { uid: uid };
+      const removeProduct = {
+        $pull: { cart: { _id: productId } },
+      };
+
+      const result = await usersCollection.findOneAndUpdate(
+        filter,
+        removeProduct
+      );
       res.send(result);
     });
   } finally {

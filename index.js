@@ -66,6 +66,14 @@ async function run() {
       }
     });
 
+    // user get and update api endpoint
+    app.post("/users/:uid", async (req, res) => {
+      const query = { uid: req.params.uid };
+      const product = { $push: { cart: req.body } };
+      const result = await usersCollection.findOneAndUpdate(query, product);
+      res.send(result);
+    });
+
     // user post api endpoint
     app.post("/users", async (req, res) => {
       const user = req.body;

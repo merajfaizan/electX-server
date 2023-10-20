@@ -66,6 +66,26 @@ async function run() {
       }
     });
 
+    // single product put api endpoint
+    app.put("/updateProduct/:productId", async (req, res) => {
+      const productId = req.params.productId;
+      const updatedProductData = req.body;
+
+      const result = await productsCollection.findOneAndUpdate(
+        { _id: new ObjectId(productId) },
+        { $set: updatedProductData },
+        { returnOriginal: true }
+      );
+
+      if (result.name) {
+        res
+          .status(201)
+          .json({ message: "Product Updated successfully", status: 201 });
+      } else {
+        res.status(500).json({ error: "Failed to Update the product" });
+      }
+    });
+
     // user get api endpoint
     app.get("/users/:uid", async (req, res) => {
       const query = { uid: req.params.uid };

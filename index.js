@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
 // api routes
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     console.log("Connected to the database");
 
     // db and collections
@@ -111,7 +111,6 @@ async function run() {
     // user get and delete a data form cart api endpoint
     app.post("/removeItem", async (req, res) => {
       const { uid, productId } = req.body;
-      console.log(`uid: ${uid}, productId: ${productId}`);
       const filter = { uid: uid };
       const removeProduct = {
         $pull: { cart: { _id: productId } },
@@ -131,9 +130,9 @@ run().catch((err) => console.log(err));
 
 // initial api routes and listen.
 app.get("/", (req, res) => {
-  res.send("Brand Shop server is Running.");
+  res.send("electeX server is Running.");
 });
 
 app.listen(port, () => {
-  console.log(`Brand Shop server listening on port ${port}`);
+  console.log(`electeX server listening on port ${port}`);
 });

@@ -29,13 +29,31 @@ async function run() {
     const productsCollection = client.db("electricShop").collection("products");
     const usersCollection = client.db("electricShop").collection("users");
 
+    // all products get api endpoint
     app.get("/products", async (req, res) => {
-      const products = await productsCollection.find({}).toArray();
+      const query = {};
+      const products = await productsCollection.find(query).toArray();
       res.send(products);
     });
 
+    // single product post api endpoint
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      if (!product || !product.name || !product.price) {
+        return res.status(400).json({ error: "Invalid product data" });
+      }
+      const result = await productsCollection.insertOne(product);
+      if (result.acknowledged) {
+        res
+          .status(201)
+          .json({ message: "Product created successfully", status: 201 });
+      } else {
+        res.status(500).json({ error: "Failed to create the product" });
+      }
+    });
+
     // user post api endpoint
-    app.post("/user", async (req, res) => {
+    app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
       res.send(result);
